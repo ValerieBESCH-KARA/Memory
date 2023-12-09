@@ -3,12 +3,12 @@ import "./App.css";
 import SingleCard from "./components/SingleCard";
 
 const cardImages = [
-  { src: "/public/MaitreWu.png", matched: false },
-  { src: "/public/cole.webp", matched: false },
-  { src: "/public/jay.png", matched: false },
-  { src: "/public/kai.webp", matched: false },
-  { src: "/public/Lloyd.webp", matched: false },
-  { src: "/public/Zane.webp", matched: false },
+  { src: "/MaitreWu.png", matched: false },
+  { src: "/cole.webp", matched: false },
+  { src: "/jay.png", matched: false },
+  { src: "/kai.webp", matched: false },
+  { src: "/Lloyd.webp", matched: false },
+  { src: "/Zane.webp", matched: false },
 ];
 
 function App() {
@@ -31,21 +31,66 @@ function App() {
     setTurns(0);
   };
 
-  const handleClick = (id) => {
-    console.log(`Clicked card with ID : ${id}`);
+  // handle a choice
+  const handleChoice = (card) => {
+    choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
   };
 
-  const cardData = {
-    id: 1,
-    src: "../public/jay.png",
-    matched: false,
+  //compare 2 selected cards
+
+  useEffect(() => {
+    if (choiceOne && choiceTwo) {
+      setDisabled(true);
+      if (choiceOne.src === choiceTwo.src) {
+        setCards((prevCards) => {
+          return prevCards.map((card) => {
+            if (card.src === choiceOne.src) {
+              return { ...card, matched: true };
+            } else {
+              return card;
+            }
+          });
+        });
+        setTimeout(() => resetTurn(), 1000);
+      } else {
+        setTimeout(() => resetTurn(), 1000);
+      }
+    }
+  }, [choiceOne, choiceTwo]);
+
+  console.log(cards);
+
+  // reset choices & increase turn
+  const resetTurn = () => {
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setTurns((prevTurns) => prevTurns + 1);
+    setDisabled(false);
   };
+
+  //start the game automaticly
+
+  useEffect(() => {
+    shuffleCards();
+  }, []);
 
   return (
-    <>
-      <h1>NinjaGo Memory</h1>
-      <SingleCard cardData={cardData} handleClick={handleClick} />
-    </>
+    <div className="App">
+      <h1>Magic Match</h1>
+      <button onClick={shuffleCards}>New game</button>
+      <div className="card-grid">
+        {cards.map((card) => (
+          <SingleCard
+            key={card.id}
+            card={card}
+            handleChoice={handleChoice}
+            flipped={card === choiceOne || card === choiceTwo || card.matched}
+            disabled={disabled}
+          />
+        ))}
+      </div>
+      <p>Turns: {turns}</p>
+    </div>
   );
 }
 
