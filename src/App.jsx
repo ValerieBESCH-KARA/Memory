@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import SingleCard from "./components/SingleCard";
+import Bingo from "./components/Bingo"; // Importez votre composant Bravo
 
 const cardImages = [
   { src: "/MaitreWu.png", matched: false },
@@ -17,9 +18,21 @@ function App() {
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [disabled, setDisabled] = useState(false);
+  const [isGameResolved, setIsGameResolved] = useState(false);
 
-  //shuffle card
+  // Ajoutez une fonction pour vérifier si toutes les cartes sont appariées
+  const areAllCardsMatched = () => {
+    return cards.every((card) => card.matched);
+  };
 
+  // Ajoutez une fonction pour gérer l'action une fois que toutes les cartes sont trouvées
+  const handleAllCardsMatched = () => {
+    console.log("Toutes les cartes sont trouvées !");
+    // Vous pouvez ajouter d'autres actions spécifiques ici
+    setIsGameResolved(true);
+  };
+
+  // shuffle card
   const shuffleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
@@ -29,6 +42,7 @@ function App() {
     setChoiceTwo(null);
     setCards(shuffledCards);
     setTurns(0);
+    setIsGameResolved(false); // Réinitialise le statut du jeu résolu
   };
 
   // handle a choice
@@ -36,8 +50,7 @@ function App() {
     choiceOne ? setChoiceTwo(card) : setChoiceOne(card);
   };
 
-  //compare 2 selected cards
-
+  // compare 2 selected cards
   useEffect(() => {
     if (choiceOne && choiceTwo) {
       setDisabled(true);
@@ -52,13 +65,15 @@ function App() {
           });
         });
         setTimeout(() => resetTurn(), 1000);
+        // Vérifiez si toutes les cartes sont appariées après chaque paire trouvée
+        if (areAllCardsMatched()) {
+          handleAllCardsMatched();
+        }
       } else {
         setTimeout(() => resetTurn(), 1000);
       }
     }
-  }, [choiceOne, choiceTwo]);
-
-  console.log(cards);
+  }, [choiceOne, choiceTwo, areAllCardsMatched]);
 
   // reset choices & increase turn
   const resetTurn = () => {
@@ -68,8 +83,7 @@ function App() {
     setDisabled(false);
   };
 
-  //start the game automaticly
-
+  // start the game automatically
   useEffect(() => {
     shuffleCards();
   }, []);
@@ -81,18 +95,25 @@ function App() {
         <button onClick={shuffleCards}>New game</button>
         <p>Turns : {turns}</p>
       </div>
-
-      <div className="card-grid">
-        {cards.map((card) => (
-          <SingleCard
-            key={card.id}
-            card={card}
-            handleChoice={handleChoice}
-            flipped={card === choiceOne || card === choiceTwo || card.matched}
-            disabled={disabled}
-          />
-        ))}
-      </div>
+      {isGameResolved ? (
+        <Bingo />
+      ) : (
+        <>
+          <div className="card-grid">
+            {cards.map((card) => (
+              <SingleCard
+                key={card.id}
+                card={card}
+                handleChoice={handleChoice}
+                flipped={
+                  card === choiceOne || card === choiceTwo || card.matched
+                }
+                disabled={disabled}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
