@@ -14,6 +14,16 @@ body {
   max-width: 860px;
   margin: 40px auto;
 }
+h1 {
+  margin: 20px;
+  color: red;
+  font-size: 40px;
+  font-weight: bold;
+}
+.Button {
+  display: flex;
+  justify-content: space-between;
+}
 button {
   background: none;
   border: 2px solid #fff;
@@ -27,6 +37,9 @@ button {
 button:hover {
   background: #c23866;
   color: #fff;
+}
+p {
+  margin: 10px;
 }
 
 .card-grid {
