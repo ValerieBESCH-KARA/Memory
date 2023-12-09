@@ -24,10 +24,14 @@ const SingleCard = ({ card, handleChoice, flipped, disabled }) => {
 };
 
 SingleCard.propTypes = {
-  card: PropTypes.string,
-  handleChoice: PropTypes.string,
-  flipped: PropTypes.string,
-  disabled: PropTypes.string,
+  card: PropTypes.shape({
+    src: PropTypes.string.isRequired,
+    matched: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  handleChoice: PropTypes.func.isRequired,
+  flipped: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default SingleCard;
