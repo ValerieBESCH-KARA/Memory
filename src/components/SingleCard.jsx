@@ -1,4 +1,5 @@
 import "./SingleCard.css";
+import PropTypes from "prop-types";
 
 const SingleCard = ({ cardData, handleClick }) => {
   const { id, src, matched } = cardData;
@@ -19,6 +20,11 @@ const SingleCard = ({ cardData, handleClick }) => {
       <img src={src} alt={`Card ${id}`} />
     </div>
   );
+};
+
+SingleCard.propTypes = {
+  cardData: PropTypes.string,
+  handleClick: PropTypes.string,
 };
 
 export default SingleCard;
