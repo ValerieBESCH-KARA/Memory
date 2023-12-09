@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import "./App.css";
-import SingleCard from "./components/SingleCard.jsx";
+import SingleCard from "./components/SingleCard";
 
 const cardImages = [
   { src: "/public/MaitreWu.png", matched: false },
@@ -11,6 +12,25 @@ const cardImages = [
 ];
 
 function App() {
+  const [cards, setCards] = useState([]);
+  const [turns, setTurns] = useState(0);
+  const [choiceOne, setChoiceOne] = useState(null);
+  const [choiceTwo, setChoiceTwo] = useState(null);
+  const [disabled, setDisabled] = useState(false);
+
+  //shuffle card
+
+  const shuffleCards = () => {
+    const shuffledCards = [...cardImages, ...cardImages]
+      .sort(() => Math.random() - 0.5)
+      .map((card) => ({ ...card, id: Math.random() }));
+
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setCards(shuffledCards);
+    setTurns(0);
+  };
+
   const handleClick = (id) => {
     console.log(`Clicked card with ID : ${id}`);
   };
