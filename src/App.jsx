@@ -20,11 +20,6 @@ function App() {
   const [disabled, setDisabled] = useState(false);
   const [isGameResolved, setIsGameResolved] = useState(false);
 
-  // Ajoutez une fonction pour vérifier si toutes les cartes sont appariées
-  const areAllCardsMatched = () => {
-    return cards.every((card) => card.matched);
-  };
-
   // Ajoutez une fonction pour gérer l'action une fois que toutes les cartes sont trouvées
   const handleAllCardsMatched = () => {
     console.log("Toutes les cartes sont trouvées !");
@@ -52,6 +47,11 @@ function App() {
 
   // compare 2 selected cards
   useEffect(() => {
+    // Ajoutez une fonction pour vérifier si toutes les cartes sont appariées
+    const areAllCardsMatched = () => {
+      return cards.every((card) => card.matched);
+    };
+
     if (choiceOne && choiceTwo) {
       setDisabled(true);
       if (choiceOne.src === choiceTwo.src) {
@@ -65,15 +65,15 @@ function App() {
           });
         });
         setTimeout(() => resetTurn(), 1000);
-        // Vérifiez si toutes les cartes sont appariées après chaque paire trouvée
-        if (areAllCardsMatched()) {
-          handleAllCardsMatched();
-        }
       } else {
         setTimeout(() => resetTurn(), 1000);
       }
     }
-  }, [choiceOne, choiceTwo, areAllCardsMatched]);
+    // Vérifiez si toutes les cartes sont appariées après chaque paire trouvée
+    if (areAllCardsMatched()) {
+      handleAllCardsMatched();
+    }
+  }, [choiceOne, choiceTwo]);
 
   // reset choices & increase turn
   const resetTurn = () => {
